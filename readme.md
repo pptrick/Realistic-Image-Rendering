@@ -41,9 +41,9 @@
 ### Bezier曲线绘制
 
 构建一个Bezier旋转体需要先绘制一条Bezier曲线，再让其绕中心轴旋转一周得到旋转体；因此Bezier曲线绘制是相当重要的一步。具体绘制方式如下：给定n+1个控制点f0, f1, ...，fn, 则由这一系列控制点生成的Bezier曲线在参数t处的坐标向量可表示为：
-$$
-Q（f，t）=\sum_{i=0}^nf_iB_{in}(t)=\sum_{i=0}^nf_iC_{n}^it^i(1-t)^{n-i}
-$$
+
+<a href="https://www.codecogs.com/eqnedit.php?latex=Q(f,t)=\sum_{i=0}^nf_iB_{in}(t)=\sum_{i=0}^nf_iC_{n}^it^i(1-t)^{n-i}" target="_blank"><img src="https://latex.codecogs.com/gif.latex?Q(f,t)=\sum_{i=0}^nf_iB_{in}(t)=\sum_{i=0}^nf_iC_{n}^it^i(1-t)^{n-i}" title="Q(f,t)=\sum_{i=0}^nf_iB_{in}(t)=\sum_{i=0}^nf_iC_{n}^it^i(1-t)^{n-i}" /></a>
+
 其中B为Bernstein基。因此，在具体实现中只需要给定t和控制点，即可得到需要的坐标位置；需要说明的是，组合数的计算可以通过其递推式，用递归算法得到：
 
 ```C++
@@ -58,11 +58,9 @@ double Comb(int i, int n)
 ### Bezier旋转体建模
 
 得到Bezier曲线之后，可令其绕中心轴旋转一周得到旋转体；具体方法是引入一个Φ角坐标衡量旋转角度，得到的曲面F(t,、Φ)由Bezier曲线参数t和旋转角参数φ共同确定。此时，笛卡尔坐标系下的坐标需要作如下变换：
-$$
-y^\prime=y\\
-z^\prime=-x\sin\phi\\
-x^\prime=x\cos\phi
-$$
+
+<a href="https://www.codecogs.com/eqnedit.php?latex=y^\prime=y\\&space;z^\prime=-x\sin\phi\\&space;x^\prime=x\cos\phi" target="_blank"><img src="https://latex.codecogs.com/gif.latex?y^\prime=y\\&space;z^\prime=-x\sin\phi\\&space;x^\prime=x\cos\phi" title="y^\prime=y\\ z^\prime=-x\sin\phi\\ x^\prime=x\cos\phi" /></a>
+
 在本例中采用了二段Bezier曲线拼接，因此还需要保证连接处的导数一致；下图是本例中构建的Bezier曲线：（openCV绘制）
 
 <img src=".\ref\Bezier.png" style="zoom:80" />
@@ -70,11 +68,9 @@ $$
 ### 牛顿梯度下降法求交
 
 本例中采用的梯度下降法为通过调整t和Φ参数，使得旋转面上的估计点距离光线最近，从而实现求交。因此误差函数即取估计点到光线的“点线欧氏距离”。其中梯度的估计方法为，先估计Bezier点Q(f,t)的梯度的解析表示，再利用这个表示估计误差函数的数值梯度（L为误差函数）：
-$$
-\frac{d}{dt}Q(f,t)=\sum_{i=0}^nf_i\frac{d}{dt}B_{in}(t)=\sum_{i=0}^nf_iC_{n}^i\frac{d}{dt}[t^i(1-t)^{n-i}]\\
-\frac{\partial}{\partial{t}}L(t,\phi)=\frac{L(t+\delta{t},\phi)-L(t,\phi)}{\delta{t}}\\
-\frac{\partial}{\partial{\phi}}L(t,\phi)=\frac{L(t,\phi+\delta{\phi})-L(t,\phi)}{\delta{\phi}}
-$$
+
+<a href="https://www.codecogs.com/eqnedit.php?latex=\frac{d}{dt}Q(f,t)=\sum_{i=0}^nf_i\frac{d}{dt}B_{in}(t)=\sum_{i=0}^nf_iC_{n}^i\frac{d}{dt}[t^i(1-t)^{n-i}]\\&space;\frac{\partial}{\partial{t}}L(t,\phi)=\frac{L(t&plus;\delta{t},\phi)-L(t,\phi)}{\delta{t}}\\&space;\frac{\partial}{\partial{\phi}}L(t,\phi)=\frac{L(t,\phi&plus;\delta{\phi})-L(t,\phi)}{\delta{\phi}}" target="_blank"><img src="https://latex.codecogs.com/gif.latex?\frac{d}{dt}Q(f,t)=\sum_{i=0}^nf_i\frac{d}{dt}B_{in}(t)=\sum_{i=0}^nf_iC_{n}^i\frac{d}{dt}[t^i(1-t)^{n-i}]\\&space;\frac{\partial}{\partial{t}}L(t,\phi)=\frac{L(t&plus;\delta{t},\phi)-L(t,\phi)}{\delta{t}}\\&space;\frac{\partial}{\partial{\phi}}L(t,\phi)=\frac{L(t,\phi&plus;\delta{\phi})-L(t,\phi)}{\delta{\phi}}" title="\frac{d}{dt}Q(f,t)=\sum_{i=0}^nf_i\frac{d}{dt}B_{in}(t)=\sum_{i=0}^nf_iC_{n}^i\frac{d}{dt}[t^i(1-t)^{n-i}]\\ \frac{\partial}{\partial{t}}L(t,\phi)=\frac{L(t+\delta{t},\phi)-L(t,\phi)}{\delta{t}}\\ \frac{\partial}{\partial{\phi}}L(t,\phi)=\frac{L(t,\phi+\delta{\phi})-L(t,\phi)}{\delta{\phi}}" /></a>
+
 
 
 通过调节t和Φ的学习率可以使得求交较快收敛。下图为Bezier旋转体建模效果图：
@@ -90,14 +86,13 @@ $$
 ### 反射与折射
 
 本例中反射和折射主要采用矢量运算的方法计算。反射满足关系：
-$$
-R=I-2（I\cdot N）N
-$$
+
+<a href="https://www.codecogs.com/eqnedit.php?latex=R=I-2(I\cdot&space;N)N" target="_blank"><img src="https://latex.codecogs.com/gif.latex?R=I-2(I\cdot&space;N)N" title="R=I-2(I\cdot N)N" /></a>
+
 其中I为入射光方向，N为表面法向，R为反射光方向。折射满足关系：
-$$
-T=\frac{\eta_i}{\eta_t}\cdot{I}+(\frac{\eta_i}{\eta_t}(-I\cdot{N})-\cos{\theta_t})\cdot{N}\\
-\cos{\theta_t=\sqrt{1-\frac{\eta_i^2(1-\cos^2{\theta_i})}{\eta_t^2}}}
-$$
+
+<a href="https://www.codecogs.com/eqnedit.php?latex=T=\frac{\eta_i}{\eta_t}\cdot{I}&plus;(\frac{\eta_i}{\eta_t}(-I\cdot{N})-\cos{\theta_t})\cdot{N}\\&space;\cos{\theta_t=\sqrt{1-\frac{\eta_i^2(1-\cos^2{\theta_i})}{\eta_t^2}}}" target="_blank"><img src="https://latex.codecogs.com/gif.latex?T=\frac{\eta_i}{\eta_t}\cdot{I}&plus;(\frac{\eta_i}{\eta_t}(-I\cdot{N})-\cos{\theta_t})\cdot{N}\\&space;\cos{\theta_t=\sqrt{1-\frac{\eta_i^2(1-\cos^2{\theta_i})}{\eta_t^2}}}" title="T=\frac{\eta_i}{\eta_t}\cdot{I}+(\frac{\eta_i}{\eta_t}(-I\cdot{N})-\cos{\theta_t})\cdot{N}\\ \cos{\theta_t=\sqrt{1-\frac{\eta_i^2(1-\cos^2{\theta_i})}{\eta_t^2}}}" /></a>
+
 
 **（代码见tracingtools.cpp）**
 
@@ -146,9 +141,9 @@ void PhotonMap::RegionFind(Vector3D Goal,double range, node* p, int& photon_num)
 ```
 
 亮度估计是在局部光照Phong模型的基础上，根据该点附近小立方体内光子数量多少，结合该点法向量对该点亮度进行重新估计。满足关系：
-$$
-I=\alpha I_0+\beta (N\cdot V)n
-$$
+
+<a href="https://www.codecogs.com/eqnedit.php?latex=I=\alpha&space;I_0&plus;\beta&space;(N\cdot&space;V)n" target="_blank"><img src="https://latex.codecogs.com/gif.latex?I=\alpha&space;I_0&plus;\beta&space;(N\cdot&space;V)n" title="I=\alpha I_0+\beta (N\cdot V)n" /></a>
+
 其中I0为原始亮度，α、β为系数，n为光子数，N为法向，V为视线方向。
 
 ### 焦散与阴影
